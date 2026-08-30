@@ -4,6 +4,7 @@
 #include<time.h>
 #include<stdlib.h>
 #include<unistd.h>
+#include<string.h>
 
 // structs
 struct win {
@@ -55,18 +56,23 @@ void Window(void) {
 
 int main(void) {
   int ch;
-  
+  char msg[] = "Hello Guys!!";
+  int row;
+  int col;
   // starts the terminal thinggy
   initscr();
+  getmaxyx(stdscr, row, col);
   raw(); // gets raw input; It puts the terminal into raw mode, meaning input is passed through with very little processing
   keypad(stdscr, TRUE); // allows use of arrows keys and 'F' keys and numpad keys etc you get it
   noecho(); /* Don't echo() while we do getch */
-
+      mvprintw(row/2, (col-strlen(msg))/2, "%s ", msg);
+      mvprintw(row-2, 0, "this screen has %d rows and %d columns", row, col);
+      printw("now resize your window and run this again!");
     //printw("hello this is my first use of ncurses\n");
     //printw("Press any key on your keyboard!!\n");
     //ch = getch(); // if we didnt use raw we would need to press enter to get to program
 
-    Window();
+    //Window();
 
   refresh(); // idk i just know you need to use it in the end in case you use printw
   getch(); // gets the character so the program closes
