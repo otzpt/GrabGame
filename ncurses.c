@@ -68,7 +68,7 @@ int main(void) {
       mvprintw(row/2, (col-strlen(msg))/2, "%s ", msg);
       mvprintw(row-2, 0, "this screen has %d rows and %d columns", row, col);
       printw("now resize your window and run this again!");
-      addstr("test");
+      addstr("\ntest");
     //printw("hello this is my first use of ncurses\n");
     //printw("Press any key on your keyboard!!\n");
     //ch = getch(); // if we didnt use raw we would need to press enter to get to program
