@@ -7,7 +7,7 @@
 #define MAX_X (GAME_WIDTH - 4 - 1)
 #define GAME_WIDTH 30
 #define GAME_HEIGHT 31
-#define MAX_OBJECT 10
+#define MAX_OBJECT 5
 
 int PlatColision(int object_x[], int object_y[], int platform_x, int platform_y, int j);
 
