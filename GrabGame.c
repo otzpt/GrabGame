@@ -36,16 +36,27 @@ void borders(int x, int y, int start_y, int start_x)
     }
 }
 
-void Object(int *y)
+void Object_reset(int *y)
 {
     (*y)++;
-
+    // resets to top
     if (*y >= GAME_HEIGHT) {
         *y = 1;
     }
 }
 
-int PlatColision(int object_x, int object_y, int platform_x, int platform_y)
+void MultipleObjects(int y, int object_x[], int object_y[], int start_y, int start_x, int *objectC)
+{
+    for (int i = 0; i <= MAX_OBJECT - 1; i++) {
+        object_x[i] = rand() % (GAME_WIDTH - 2) + 1; // randomizes @ position
+        object_y[i] = 1 + (y * 2);
+        mvaddch(start_y + object_y[i], start_x + object_x[i], '@'); // draws the falling object
+        // counts how many objects on screen
+        *objectC = *objectC + 1;
+    }
+}
+
+int PlatColision(int object_x[], int object_y[], int platform_x, int platform_y)
 {
     if (object_y == platform_y && object_x >= platform_x && object_x < platform_x + 4) {
         return 1;
@@ -81,8 +92,8 @@ int main(void) {
 
         PlatMove(ch, &x);
         if (PlatColision(object_x, object_y, x, y)) {
-            object_y = 1; // resets @ to the top if colision is detected with platform
-            object_x = rand() % (GAME_WIDTH - 2) + 1; // randomizes @ position
+            object_y[] = 1; // resets @ to the top if colision is detected with platform
+            //object_x[] = rand() % (GAME_WIDTH - 2) + 1; // randomizes @ position
         }
 
         if (ch == 'q') {
@@ -93,16 +104,24 @@ int main(void) {
 
         borders(x, y, start_y, start_x);
         mvaddstr(start_y + y, start_x + x, "cccc"); // Draw "cccc" at the platform's position (x,y) plus the game's position (start_x,start_y)
-        mvaddch(start_y + object_y, start_x + object_x, '@'); // draws the falling object
         refresh(); // refreshes scree
 
         object_timer++;
 
+        int i;
+        // faling object speed
         if (object_timer >= 20) {
-            Object(&object_y);
+            for (i = 0; i <= MAX_OBJECT - 1; i++) {
+                Object_reset(&object_y[i]);
+            }
             object_timer = 0;
         }
+
         usleep(10000);
+
+        if (objectC == MAX_OBJECT) {
+            objectC = 1;
+        }
     }
     endwin();
     return 0;
