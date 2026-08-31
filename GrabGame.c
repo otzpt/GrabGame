@@ -1,4 +1,3 @@
-// KEEP UNUSED LIBRARIES FOR NOW THEY MIGHT BE NECESSARY
 #include<ncurses.h>
 #include<time.h>
 #include<stdlib.h>
@@ -8,7 +7,7 @@
 #define MAX_X (GAME_WIDTH - 4 - 1)
 #define GAME_WIDTH 30
 #define GAME_HEIGHT 31
-#define MAX_OBJECT 30
+#define MAX_OBJECT 10
 
 int PlatColision(int object_x[], int object_y[], int platform_x, int platform_y, int j);
 
@@ -19,19 +18,31 @@ void test_ground(int object_y[], int object_x[], int start_y, int start_x, int p
     // and keeps track of how many objects are on screen
     // to avoid overflows;
     // every loop is one object
-    for(int i = 0; i < MAX_OBJECT; i++) {
+    static int delay = 200;
+    static int timer = 0;
+
+    timer++;
+
+    for(int i = *objectGen; i < MAX_OBJECT; i++) {
         // check for colison
         if(PlatColision(object_x, object_y, platform_x, platform_y, i)) {
             (*objectGen)--; // if theres a colision remove one to the tota ammount
         }
+
         // spawns object at a random delay
         if (*objectGen < MAX_OBJECT) {
-            int delay = rand() % 201 + 100; // calculates a random delay between spawns
-            object_x[i] = rand() % (GAME_WIDTH - 2) + 1; // generates object at random x position
-            usleep(delay * 1000); // usleep is in micro seconds so *1000
-            // generates the object and aupdates the counter
-            mvaddch(start_y + object_y[i], start_x + object_x[i], '@');
-            (*objectGen)++;
+            //usleep(delay * 1000); // usleep is in micro seconds so *1000
+            if (delay <= timer) {
+                // generates the object and aupdates the counter
+                object_x[i] = rand() % (GAME_WIDTH - 2) + 1; // generates random x position for object
+                mvaddch(start_y + object_y[i], start_x + object_x[i], '@');
+
+                (*objectGen)++;
+                timer = 0; // resets the timer
+                delay = rand() % 201 + 100; // calculates a random delay between spawns
+
+                break;
+            }
         } else {
             ;
         }
@@ -113,7 +124,7 @@ int main(void) {
     int i;
     int x = (GAME_WIDTH - 4) / 2;
     int running = 1;
-    int object_x[MAX_OBJECT], object_y[MAX_OBJECT], object_timer = 0; // objectC is short for object counter, counts how many @ are in screnn there is a cap of 10 @
+    int object_x[MAX_OBJECT], object_y[MAX_OBJECT], object_timer = 0;
 
     srand(time(NULL));
 
@@ -157,20 +168,23 @@ int main(void) {
 
         borders(x, y, start_y, start_x);
         mvaddstr(start_y + y, start_x + x, "cccc"); // Draw "cccc" at the platform's position (x,y) plus the game's position (start_x,start_y)
-        refresh(); // refreshes scree
 
         object_timer++;
 
         // faling object speed
         if (object_timer >= 20) {
-            for (i = 0; i <= MAX_OBJECT - 1; i++) {
+            for (i = 0; i < objectGen; i++) {
                 Object_reset(object_x, object_y, x, y, i);
             }
             object_timer = 0;
         }
 
-        Object_genaration(object_y, object_x, start_y, start_x, x, y, &objectGen);
+        for (i = 0; i < objectGen; i++) {
+            mvaddch(start_y + object_y[i], start_x + object_x[i], '@');
+        }
 
+        test_ground(object_y, object_x, start_y, start_x, x, y, &objectGen);
+        refresh(); // refreshes screen
         usleep(10000);
     }
     endwin();
