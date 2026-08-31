@@ -30,13 +30,13 @@ The game is linux only and to adjust settings you have to mess with the ```GrabG
 
 To change the ammount of objects falling alter this line:
 ```C
-#define MAX_OBJECT 5 // to be more specific alter the value 5 default is 5
+#define MAX_OBJECT 5 /* to be more specific alter the value 5 default is 5 */
 ```
 more specific line **10**
 
 To change the speed at wich the object falls alter this line:
 ```C
-if (object_timer >= 20) // being specific alter the value 20 is the default
+if (object_timer >= 20) // being specific alter the value 20 default is 20
 ```
 more specific line **175**
 
