@@ -12,7 +12,7 @@
 int PlatColision(int object_x[], int object_y[], int platform_x, int platform_y, int j);
 
 // functions
-void test_ground(int object_y[], int object_x[], int start_y, int start_x, int platform_x, int platform_y, int *objectGen)
+void Object_genaration(int object_y[], int object_x[], int start_y, int start_x, int platform_x, int platform_y, int *objectGen)
 {
     // this function generates the object '@'
     // and keeps track of how many objects are on screen
@@ -82,31 +82,6 @@ void Object_reset(int object_x[], int object_y[], int platform_x, int platform_y
     }
     if (object_y[i] >= GAME_HEIGHT) {
         object_y[i] = 1;
-    }
-}
-
-void Object_genaration(int object_y[], int object_x[], int start_y, int start_x, int platform_x, int platform_y, int *objectGen)
-{
-    // this function generates the object '@'
-    // and keeps track of how many objects are on screen
-    // to avoid overflows;
-    // every loop is one object
-    for(int i = 0; i < MAX_OBJECT; i++) {
-        // check for colison
-        if(PlatColision(object_x, object_y, platform_x, platform_y, i)) {
-            (*objectGen)--; // if theres a colision remove one to the tota ammount
-        }
-        // spawns object at a random delay
-        if (*objectGen < MAX_OBJECT) {
-            int delay = rand() % 201 + 100; // calculates a random delay between spawns
-            object_x[i] = rand() % (GAME_WIDTH - 2) + 1; // generates object at random x position
-            usleep(delay * 1000); // usleep is in micro seconds so *1000
-            // generates the object and aupdates the counter
-            mvaddch(start_y + object_y[i], start_x + object_x[i], '@');
-            (*objectGen)++;
-        } else {
-            ;
-        }
     }
 }
 
@@ -183,7 +158,7 @@ int main(void) {
             mvaddch(start_y + object_y[i], start_x + object_x[i], '@');
         }
 
-        test_ground(object_y, object_x, start_y, start_x, x, y, &objectGen);
+        Object_genaration(object_y, object_x, start_y, start_x, x, y, &objectGen);
         refresh(); // refreshes screen
         usleep(10000);
     }

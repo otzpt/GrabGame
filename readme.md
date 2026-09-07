@@ -17,7 +17,7 @@ now
 make
 ```
 that compiles the game
-```bash
+```bash 
 ./grabgame
 ```
 and now this runs the game
